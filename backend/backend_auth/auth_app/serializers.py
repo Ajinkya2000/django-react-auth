@@ -29,23 +29,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     email = serializers.CharField(max_length=300, required=True)
-    # password = serializers.CharField(required=True, write_only=True)
-
-    name = serializers.SerializerMethodField(read_only=True)
-    isAdmin = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'name', 'first_name', 'last_name', 'email', 'isAdmin')
-
-    def get_name(self, obj):
-        name = obj.first_name
-        if name == '':
-            name = obj.email
-        return name
-
-    def get_isAdmin(self, obj):
-        return obj.is_staff
+        fields = ('id', 'username', 'first_name', 'last_name', 'email')
 
 
 class UserSerializerWithToken(UserSerializer):
@@ -53,7 +40,7 @@ class UserSerializerWithToken(UserSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'username', 'name', 'first_name', 'last_name', 'email', 'isAdmin', 'token')
+        fields = ('id', 'username', 'last_name', 'first_name', 'email', 'token')
 
     def get_token(self, obj):
         token = RefreshToken.for_user(obj)
